@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class SharedserviceService {
+export class SharedService {
     //Whether a user is logged in or not
     private loggedIn = new BehaviorSubject(false);
     public loggedInCurrent = this.loggedIn.asObservable();

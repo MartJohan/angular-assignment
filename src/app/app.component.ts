@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SharedserviceService } from './sharedservice.service';
+import { SharedService } from './services/shared.service';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +8,7 @@ import { SharedserviceService } from './sharedservice.service';
 })
 export class AppComponent implements OnInit{
 
-  constructor(private shared : SharedserviceService) {}
+  constructor(private shared : SharedService) {}
 
   ngOnInit() {
     if(localStorage.getItem("LoggedIn") === null) { localStorage.setItem("LoggedIn","0") }

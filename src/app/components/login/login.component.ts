@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SharedserviceService } from '../sharedservice.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -8,17 +8,16 @@ import { SharedserviceService } from '../sharedservice.service';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private shared : SharedserviceService) {
+  constructor(private userService : UserService) {
 
    }
 
   async ngOnInit()  {
-    this.shared.loggedInCurrent.subscribe(value => { console.log(`Logged in value is ${value}`)})
+    
   }
 
   logIn() {
     localStorage.setItem("LoggedIn","1");
-    this.shared.changeLoggedIn(true);
   }
 
 }

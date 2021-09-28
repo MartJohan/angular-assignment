@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { CatalogueComponent } from './catalogue/catalogue.component';
-import { TrainerComponent } from './trainer/trainer.component';
-import { LoginComponent } from './login/login.component';
+import { CatalogueComponent } from './components/catalogue/catalogue.component';
+import { TrainerComponent } from './components/trainer/trainer.component';
+import { LoginComponent } from './components/login/login.component';
 import { AppRoutingModule } from './app-routing.module';
-import { NavbarComponent } from './navbar/navbar.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
 
 @NgModule({
   declarations: [
