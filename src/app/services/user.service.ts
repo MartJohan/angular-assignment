@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { url } from 'inspector';
 
 @Injectable({
   providedIn: 'root'
@@ -50,7 +49,7 @@ export class UserService {
   }
 
   async patchUser(id : number, pokemon : Array<any>) {
-    await fetch(`${url}/trainers/${id}`, {
+    await fetch(`${this.baseURL}/trainers/${id}`, {
       method: 'PATCH', // NB: Set method to PATCH
       headers: {
           'X-API-Key': this.key,
