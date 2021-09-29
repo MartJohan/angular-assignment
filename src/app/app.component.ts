@@ -11,8 +11,13 @@ export class AppComponent implements OnInit{
   constructor(private userService : UserService) {}
 
   ngOnInit() {
+    let trainer = localStorage.getItem("trainer");
+    console.log(`Trainer : ${trainer}`)
     if(localStorage.getItem("LoggedIn") === null) { localStorage.setItem("LoggedIn","0") }
-    if(localStorage.getItem("trainer") === null) { localStorage.setItem("trainer", JSON.stringify("")) }
+    if(trainer === "" || trainer === null) { 
+      this.userService.changeTrainer(null);
+    }
+    else { this.userService.changeTrainer(trainer); }
     
     if(localStorage.getItem("LoggedIn") !== "0") {
       this.userService.changeLoggedIn(true);

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { Trainer } from '../models/trainer.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,8 @@ export class UserService {
   private loggedIn = new BehaviorSubject(false);
   public loggedInCurrent = this.loggedIn.asObservable();
 
-  //Observeable for username
-  private trainer = new BehaviorSubject("");
+  //Observeable for trainer
+  private trainer = new BehaviorSubject<Trainer | null>(null);
   public trainerCurrent = this.trainer.asObservable();
 
   private baseURL = environment.apiBaseUrl;
@@ -27,8 +28,14 @@ export class UserService {
   }
 
   changeTrainer(value : any) {
-    localStorage.setItem("trainer", JSON.stringify(value))
-    this.trainer.next(value)
+    if(value === null) {
+      localStorage.setItem("trainer","");
+      this.trainer.next(null);
+    } else {
+      localStorage.setItem("trainer", JSON.stringify(value))
+      this.trainer.next(value)
+    }
+    
   }
 
   //HTTP calls
