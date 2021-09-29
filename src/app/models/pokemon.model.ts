@@ -1,4 +1,4 @@
-export interface PokemnResponse {
+export interface PokemonResponse {
     next : string,
     previous : string,
     results : Pokemon[]

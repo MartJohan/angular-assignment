@@ -5,7 +5,7 @@ import { environment } from 'src/environments/environment';
 import { Trainer } from '../models/trainer.model';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { PokemnResponse, Pokemon } from '../models/pokemon.model';
+import { PokemonResponse, Pokemon } from '../models/pokemon.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,12 +19,13 @@ export class UserService {
   private trainer = new BehaviorSubject<Trainer | null>(null);
   public trainerCurrent = this.trainer.asObservable();
 
-  private baseURL = environment.apiBaseUrl;
+  private baseURL = environment.apiBaseUrl;        
   private key = environment.apiKey;
 
   private next : string = environment.apiPokemon;
   private previous : string = "";
   private pokemons : Pokemon[] = [];
+  private pokeResult : PokemonResponse | null = null;
 
   constructor(private http : HttpClient) { }
   private pokemonApi = environment.apiPokemon
@@ -57,19 +58,18 @@ export class UserService {
   }
 
   getNextPokemon(){
-    console.log("first " + this.next)
-    this.http.get<PokemnResponse>(this.next)
-    .subscribe(this.handleResponse)
+    this.http.get<PokemonResponse>(this.next)
+    .subscribe(response => {this.handleResponse(response)})
+    return this.next,this.previous,this.pokemons
   }
 
   getPreviousPokemon(){
-    this.http.get<PokemnResponse>(this.previous)
-    .subscribe(this.handleResponse)
+    this.http.get<PokemonResponse>(this.previous)
+    .subscribe(response => {this.handleResponse(response)})
   }
   
-  handleResponse(response : PokemnResponse) {
+  handleResponse(response : PokemonResponse) {
       this.next = response.next
-      console.log(this.next);
       this.previous = response.previous
       this.pokemons = response.results
   }
