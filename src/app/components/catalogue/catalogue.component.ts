@@ -1,6 +1,8 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { PokemonResponse } from 'src/app/models/pokemon.model';
-import { UserService } from 'src/app/services/user.service';
+import { Pokemon, PokemonResponse } from 'src/app/models/pokemon.model';
+import { PokemonService } from 'src/app/services/pokemon.service';
+import { environment } from "src/environments/environment";
 
 @Component({
   selector: 'app-catalogue',
@@ -8,17 +10,37 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./catalogue.component.css']
 })
 export class CatalogueComponent implements OnInit {
-  public PokeResponse : PokemonResponse | null = null
+  private next : string = environment.apiPokemon;
+  private previous : string = "";
+  private pokemons : Pokemon[] = [];
 
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly pokemonService: PokemonService) { }
 
   ngOnInit(): void {
-    
-  }
-  getNextPokemon(){
-    let PokeResponse = this.userService.getNextPokemon();
-    console.log(PokeResponse);
-    
+    this.getNextPokemon();
   }
 
+  getNextPokemon(){
+    this.pokemonService.getNextPokemon(this.next).subscribe(data => {
+      this.handleResponse(data);
+    },
+    (error : HttpErrorResponse) => {
+      console.log(error);
+    })
+  }
+
+  getPreviousPokemon(){
+    this.pokemonService.getNextPokemon(this.previous).subscribe(data => {
+      this.handleResponse(data);
+    },
+    (error : HttpErrorResponse) => {
+      console.log(error);
+    })
+  }
+
+  handleResponse(response : PokemonResponse) {
+    this.next = response.next
+    this.previous = response.previous
+    this.pokemons = response.results
+  }
 }

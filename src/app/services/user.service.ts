@@ -26,9 +26,10 @@ export class UserService {
   private previous : string = "";
   private pokemons : Pokemon[] = [];
   private pokeResult : PokemonResponse | null = null;
+  private pokemonApi = environment.apiPokemon
 
   constructor(private http : HttpClient) { }
-  private pokemonApi = environment.apiPokemon
+  
 
   changeLoggedIn(value : boolean) {
     if(value) {
@@ -38,8 +39,8 @@ export class UserService {
   }
 
   changeTrainer(value : any) {
+    localStorage.setItem("trainer","")
     if(value === null) {
-      localStorage.setItem("trainer","");
       this.trainer.next(null);
     } else {
       localStorage.setItem("trainer", JSON.stringify(value))
@@ -50,29 +51,7 @@ export class UserService {
 
   //HTTP calls
 
-  async getSpecificPokemons(pokemon : any){
-    this.http.get(`${this.pokemonApi}`,pokemon)
-    .subscribe((pokemon => {
-      console.log(pokemon);
-    }))
-  }
-
-  getNextPokemon(){
-    this.http.get<PokemonResponse>(this.next)
-    .subscribe(response => {this.handleResponse(response)})
-    return this.next,this.previous,this.pokemons
-  }
-
-  getPreviousPokemon(){
-    this.http.get<PokemonResponse>(this.previous)
-    .subscribe(response => {this.handleResponse(response)})
-  }
-  
-  handleResponse(response : PokemonResponse) {
-      this.next = response.next
-      this.previous = response.previous
-      this.pokemons = response.results
-  }
+ 
 
 
   create(user : any) : void {
