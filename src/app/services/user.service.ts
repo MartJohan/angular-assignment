@@ -1,12 +1,36 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
+//Whether a user is logged in or not
+  private loggedIn = new BehaviorSubject(false);
+  public loggedInCurrent = this.loggedIn.asObservable();
+
+  //Observeable for username
+  private username = new BehaviorSubject("");
+  public usernameCurrent = this.username.asObservable();
+
   private baseURL = "https://vuejs-assignment-3.herokuapp.com/trainers"
   private key = "RakrKsq94tlf3PZmAnuQ";
-  constructor() { }
+  constructor(private http : HttpClient) { }
+
+  changeLoggedIn(value : boolean) {
+    if(value) {
+      localStorage.setItem("LoggedIn","1")
+    } else { localStorage.setItem("LoggedIn","0") }
+    this.loggedIn.next(value);
+  }
+
+  changeUsername(value : string) {
+    localStorage.setItem("username",value)
+    this.username.next(value)
+  }
+
+  //HTTP calls
 
   async getUser(username : string) {
     await fetch(`${this.baseURL}?username=${username}`)
@@ -21,32 +45,14 @@ export class UserService {
     })
   }
 
-  async postUser(username : string) {
-    await fetch(`${this.baseURL}`, {
-      method : 'POST',
-      headers : {
-        'X-API-Key' : this.key,
-        'Content-Type' : 'application/json'
-      },
-      body : JSON.stringify({
-        username : username,
-        pokemon : []
+  async postUser(user : any)  {
+    console.log("inne");
+      this.http.post(this.baseURL, user, {headers : {'x-api-key' : this.key}})
+      .subscribe(response => {
+        console.log(response)
       })
-    })
-    .then(response => {
-      if(!response.ok) {
-        throw new Error('Could not create new Trainer')
-      }
-      return response.json();
-    })
-    .then(newUser => {
-      return newUser;
-    })
-    .catch(error => {
-      console.log(error);
-    })
-    
   }
+
 
   async patchUser(id : number, pokemon : Array<any>) {
     await fetch(`${this.baseURL}/trainers/${id}`, {

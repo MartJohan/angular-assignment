@@ -2,7 +2,7 @@
     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/850.png" class="rounded mx-auto d-block" alt="Picture of Pikachu">
     <div class="d-flex justify-content-center">
         <div class="w-50 p-3">  <br/>
-            <input class="form-control" placeholder="Write your name here..."> <br/>
+            <input class="form-control" placeholder="Write your name here..." [formControl]="name"> <br/>
             <button class="btn btn-primary form-control" (click)="logIn()">Confirm</button>
         </div>
     </div>
