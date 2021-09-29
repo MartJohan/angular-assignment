@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-catalogue',
@@ -7,10 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CatalogueComponent implements OnInit {
 
-  constructor() { }
+  constructor(private readonly userService: UserService) { }
 
   ngOnInit(): void {
     
+  }
+  getNextPokemon(){
+    this.userService.getNextPokemon();
   }
 
 }

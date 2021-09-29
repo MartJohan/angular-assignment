@@ -3,6 +3,9 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Trainer } from '../models/trainer.model';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { PokemnResponse, Pokemon } from '../models/pokemon.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +21,13 @@ export class UserService {
 
   private baseURL = environment.apiBaseUrl;
   private key = environment.apiKey;
+
+  private next : string = environment.apiPokemon;
+  private previous : string = "";
+  private pokemons : Pokemon[] = [];
+
   constructor(private http : HttpClient) { }
+  private pokemonApi = environment.apiPokemon
 
   changeLoggedIn(value : boolean) {
     if(value) {
@@ -39,6 +48,33 @@ export class UserService {
   }
 
   //HTTP calls
+
+  async getSpecificPokemons(pokemon : any){
+    this.http.get(`${this.pokemonApi}`,pokemon)
+    .subscribe((pokemon => {
+      console.log(pokemon);
+    }))
+  }
+
+  getNextPokemon(){
+    console.log("first " + this.next)
+    this.http.get<PokemnResponse>(this.next)
+    .subscribe(this.handleResponse)
+  }
+
+  getPreviousPokemon(){
+    this.http.get<PokemnResponse>(this.previous)
+    .subscribe(this.handleResponse)
+  }
+  
+  handleResponse(response : PokemnResponse) {
+      this.next = response.next
+      console.log(this.next);
+      this.previous = response.previous
+      this.pokemons = response.results
+  }
+
+
   create(user : any) : void {
     this.http.post(this.baseURL, user, {headers : {'x-api-key' : this.key}})
       .subscribe((user) => {
