@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from 'src/app/services/user.service';
 import { SharedService } from '../../services/shared.service';
 
 @Component({
@@ -9,14 +10,15 @@ import { SharedService } from '../../services/shared.service';
 export class NavbarComponent implements OnInit {
   public loggedIn : boolean = false;
 
-  constructor(private shared : SharedService) { }
+  constructor(private user : UserService) { }
 
   ngOnInit(): void {
-    this.shared.loggedInCurrent.subscribe(value => { this.loggedIn = value });
+    this.user.loggedInCurrent.subscribe(value => { this.loggedIn = value });
   }
 
   logOut() {
-    this.shared.changeLoggedIn(false);
+    localStorage.setItem("username","");
+    this.user.changeLoggedIn(false);
   }
 
 }

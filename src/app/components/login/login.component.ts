@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
 import { Router } from '@angular/router';
+import { Trainer } from 'src/app/models/trainer.model';
+import { TrainerComponent } from '../trainer/trainer.component';
 
 @Component({
   selector: 'app-login',
@@ -12,8 +14,8 @@ export class LoginComponent implements OnInit {
   public name = new FormControl('');
 
   constructor(
-    private userService : UserService,
-    private router: Router,
+    private readonly userService : UserService,
+    private readonly router: Router,
       ) {
 
    }
@@ -28,10 +30,16 @@ export class LoginComponent implements OnInit {
   }
 
   async logIn() {
-    let body = {"username" : this.name.value, "Pokemons" : []}
-    this.userService.postUser(body);
-    //this.userService.changeLoggedIn(true);
-    this.userService.changeUsername(this.name.value);
+    let trainer = {
+      name : this.name.value,
+      pokemon : []
+    }
+
+    this.userService.create(trainer);
+    this.userService.changeLoggedIn(true);
+    this.userService.changeTrainer(trainer);
+    this.router.navigate(['catalogue']);
+
   }
 
 }
