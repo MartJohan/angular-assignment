@@ -14,6 +14,7 @@ const routes = [
     {
         path : 'catalogue',
         component : CatalogueComponent,
+        canActivate : [ AuthGuardGuard ]
     },
     {
         path : 'login',
@@ -22,6 +23,7 @@ const routes = [
     {
         path : 'trainer',
         component : TrainerComponent,
+        canActivate : [ AuthGuardGuard ]
     }
 ];
 

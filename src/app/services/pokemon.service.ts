@@ -27,22 +27,6 @@ export class PokemonService{
         }))
       }
     
-      /* getNextPokemon(){
-        this.http.get<PokemonResponse>(this.next)
-        .subscribe(response => {this.handleResponse(response)})
-      }
-    
-      getPreviousPokemon(){
-        this.http.get<PokemonResponse>(this.previous)
-        .subscribe(response => {this.handleResponse(response)})
-      }
-      
-      handleResponse(response : PokemonResponse) {
-          this.next = response.next
-          this.previous = response.previous
-          this.pokemons = response.results
-      }
-      */
      getNextPokemon(next : string) {
          return this.http.get<PokemonResponse>(next);
      }

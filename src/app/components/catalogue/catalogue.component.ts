@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Pokemon, PokemonResponse } from 'src/app/models/pokemon.model';
 import { PokemonService } from 'src/app/services/pokemon.service';
+import { UserService } from 'src/app/services/user.service';
 import { environment } from "src/environments/environment";
 
 @Component({
@@ -11,10 +12,13 @@ import { environment } from "src/environments/environment";
 })
 export class CatalogueComponent implements OnInit {
   private next : string = environment.apiPokemon;
-  private previous : string = "";
-  private pokemons : Pokemon[] = [];
+  public previous : string = "";
+  public allPokemons : Pokemon[] = [];
+  public pokemonUrl : string = environment.apiPokemon;
+  public imageUrl : string = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"
+  public catchedPokemon : Pokemon[] = [];
 
-  constructor(private readonly pokemonService: PokemonService) { }
+  constructor(private readonly pokemonService: PokemonService, private readonly userService : UserService) { }
 
   ngOnInit(): void {
     this.getNextPokemon();
@@ -41,7 +45,19 @@ export class CatalogueComponent implements OnInit {
   handleResponse(response : PokemonResponse) {
     this.next = response.next
     this.previous = response.previous
-    this.pokemons = response.results
-    console.log(this.pokemons);
+    this.allPokemons = response.results
+    this.allPokemons.forEach(pokemon => {
+      let id = pokemon.url.split("/pokemon/")
+      id[1] = id[1].slice(0,-1);
+      pokemon.id = parseInt(id[1]);
+      pokemon.imageUrl = this.imageUrl + id[1];
+    });
+    console.log(this.previous);
+  }
+
+
+  addPokemonToParty(value : Pokemon) {
+    this.catchedPokemon.push(value);
+    this.userService.patchUserPokemon(1,this.catchedPokemon);
   }
 }

@@ -112,13 +112,13 @@ export class UserService {
       );
   }
 
-  async patchUserPokemon(id: number, pokemon: Array<any>) {
+  async patchUserPokemon(id: number, pokemon: Array<Pokemon>) {
     this.http
-      .patch(`${this.baseURL}/${id}`, pokemon, {
+      .patch(`${this.baseURL}/${id}`, {pokemon : pokemon}, {
         headers: { 'x-api-key': this.key },
       })
       .subscribe((response) => {
-        console.log(`Returning ${response}`);
+        localStorage.setItem("trainer",JSON.stringify(response))
         return response;
       });
   }
