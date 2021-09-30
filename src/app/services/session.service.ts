@@ -19,6 +19,7 @@ export class SessionService {
     const storedTrainer = localStorage.getItem("trainer");
     if(storedTrainer) {
       this._trainer = JSON.parse(storedTrainer) as Trainer;
+      this.setLoggedIn(true);
     }
    }
 

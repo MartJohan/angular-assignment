@@ -24,6 +24,7 @@ export class NavbarComponent {
   logOut() {
     this.sessionService.logout();
     this.router.navigate(['login']);
+    this.sessionService.setLoggedIn(false);
   }
 
 }

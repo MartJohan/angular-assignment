@@ -40,6 +40,5 @@ export class LoginComponent implements OnInit {
       this.sessionService.setLoggedIn(true);
       await this.router.navigate(['catalogue'])
     });
-    
   }
 }

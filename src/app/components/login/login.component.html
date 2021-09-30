@@ -10,10 +10,11 @@
                 #username="ngModel"
                 name = "username"
                 id = "username"
-                required>
+                required> <br/>
                 <button class="btn btn-primary form-control"
                 type="submit">Confirm</button>
             </form>
         </div>
     </div>
+    <p class="mx-auto text-center" *ngIf="attempting">Trying to log in...</p>
 </div>
