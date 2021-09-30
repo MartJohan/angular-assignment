@@ -1,27 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { SessionService } from 'src/app/services/session.service';
 import { UserService } from 'src/app/services/user.service';
-import { SharedService } from '../../services/shared.service';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent {
   public loggedIn : boolean = false;
+  public loggedInSub : Subscription | undefined;
 
-  constructor(private readonly user : UserService, private readonly router : Router) { }
+  constructor(private readonly user : UserService,
+    private readonly router : Router,
+    private readonly sessionService : SessionService) {}
 
-  ngOnInit(): void {
-    this.user.loggedInCurrent.subscribe(value => { this.loggedIn = value });
-  }
+    ngOnInit() {
+      this.loggedInSub = this.sessionService.loggedInCurrent.subscribe(value => this.loggedIn = value);
+    }
 
   logOut() {
-    localStorage.setItem("trainer","");
-    this.user.changeTrainer(null)
-    this.user.changeLoggedIn(false);
-
+    this.sessionService.logout();
+    this.router.navigate(['login']);
   }
 
 }

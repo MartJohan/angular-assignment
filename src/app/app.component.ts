@@ -35,6 +35,7 @@ export class AppComponent implements OnInit{
       this.userService.changeTrainer(null);
     }else {
       // We need to use JSON.parse when getting trainers
+      trainer = JSON.parse(trainer);
       this.userService.changeTrainer(trainer);
     }
   }

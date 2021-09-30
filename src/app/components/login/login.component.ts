@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
 import { Router } from '@angular/router';
 import { Trainer } from 'src/app/models/trainer.model';
 import { TrainerComponent } from '../trainer/trainer.component';
+import { SessionService } from 'src/app/services/session.service';
 
 @Component({
   selector: 'app-login',
@@ -11,35 +12,34 @@ import { TrainerComponent } from '../trainer/trainer.component';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  public name = new FormControl('');
 
   constructor(
     private readonly userService : UserService,
     private readonly router: Router,
+    private readonly sessionService : SessionService
       ) {
 
    }
 
   ngOnInit()  {
-    if(localStorage.getItem("LoggedIn") === "1") {
-      this.router.navigate(["/catalogue"]);
-      this.userService.changeLoggedIn(true);
-    } else {
-      this.userService.changeLoggedIn(false);
+    if(this.sessionService.trainer !== undefined) {
+      this.router.navigate(['catalogue'])
     }
   }
 
-  async logIn() {
-    let trainer = {
-      name : this.name.value,
-      pokemon : []
-    }
-
-    this.userService.create(trainer);
-    this.userService.changeLoggedIn(true);
-    this.userService.changeTrainer(trainer);
-    this.router.navigate(['catalogue']);
-
+  get attempting() : boolean {
+    return this.userService.attempting;
   }
 
+  onSubmit(loginForm : NgForm) : void {
+
+    const { username } = loginForm.value;
+    console.log(loginForm.value);
+
+    this.userService.authenticate(username, async () => {
+      this.sessionService.setLoggedIn(true);
+      await this.router.navigate(['catalogue'])
+    });
+    
+  }
 }

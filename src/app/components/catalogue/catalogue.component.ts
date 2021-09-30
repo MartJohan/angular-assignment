@@ -42,5 +42,6 @@ export class CatalogueComponent implements OnInit {
     this.next = response.next
     this.previous = response.previous
     this.pokemons = response.results
+    console.log(this.pokemons);
   }
 }

@@ -12,20 +12,9 @@ import { UserService } from 'src/app/services/user.service';
 export class TrainerComponent implements OnInit {
 
   private trainer : Trainer | null = null;
-  private trainerSub : Subscription | undefined;
 
   constructor(private readonly userService : UserService, private readonly router : Router) { }
 
   ngOnInit() : void {
-    this.trainerSub = this.userService.trainerCurrent.subscribe(trainer => this.trainer = trainer)
-    console.log(this.trainer === null);
-    if(this.trainer === null){
-      this.router.navigate(["/login"])
-    }
   }
-
-  ngOnDestroy() {
-    this.trainerSub?.unsubscribe();
-  }
-
 }

@@ -3,6 +3,7 @@ import { Router, RouterModule } from "@angular/router";
 import { CatalogueComponent } from "./components/catalogue/catalogue.component";
 import { LoginComponent } from "./components/login/login.component";
 import { TrainerComponent } from "./components/trainer/trainer.component";
+import { AuthGuardGuard } from "./services/auth-guard.guard";
 
 const routes = [
     {
@@ -12,7 +13,7 @@ const routes = [
     },
     {
         path : 'catalogue',
-        component : CatalogueComponent
+        component : CatalogueComponent,
     },
     {
         path : 'login',
@@ -20,7 +21,7 @@ const routes = [
     },
     {
         path : 'trainer',
-        component : TrainerComponent
+        component : TrainerComponent,
     }
 ];
 

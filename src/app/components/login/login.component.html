@@ -2,8 +2,18 @@
     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/850.png" class="rounded mx-auto d-block" alt="Picture of Pikachu">
     <div class="d-flex justify-content-center">
         <div class="w-50 p-3">  <br/>
-            <input class="form-control" placeholder="Write your name here..." [formControl]="name"> <br/>
-            <button class="btn btn-primary form-control" (click)="logIn()">Confirm</button>
+            <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+                <input 
+                ngModel
+                class="form-control"
+                placeholder="Write your name here..."
+                #username="ngModel"
+                name = "username"
+                id = "username"
+                required>
+                <button class="btn btn-primary form-control"
+                type="submit">Confirm</button>
+            </form>
         </div>
     </div>
 </div>

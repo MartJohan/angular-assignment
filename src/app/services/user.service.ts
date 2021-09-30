@@ -1,75 +1,125 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Trainer } from '../models/trainer.model';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {
+  catchError,
+  finalize,
+  map,
+  retry,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 import { PokemonResponse, Pokemon } from '../models/pokemon.model';
+import { SessionService } from './session.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
-//Whether a user is logged in or not
-  private loggedIn = new BehaviorSubject(false);
-  public loggedInCurrent = this.loggedIn.asObservable();
+  private _trainer: Trainer | undefined;
+  public attempting: boolean = false;
+  private error: string = '';
 
-  //Observeable for trainer
-  private trainer = new BehaviorSubject<Trainer | null>(null);
-  public trainerCurrent = this.trainer.asObservable();
-
-  private baseURL = environment.apiBaseUrl;        
+  private baseURL = environment.apiBaseUrl;
   private key = environment.apiKey;
 
-  private next : string = environment.apiPokemon;
-  private previous : string = "";
-  private pokemons : Pokemon[] = [];
-  private pokeResult : PokemonResponse | null = null;
-  private pokemonApi = environment.apiPokemon
-
-  constructor(private http : HttpClient) { }
-  
-
-  changeLoggedIn(value : boolean) {
-    if(value) {
-      localStorage.setItem("LoggedIn","1")
-    } else { localStorage.setItem("LoggedIn","0") }
-    this.loggedIn.next(value);
+  constructor(
+    private http: HttpClient,
+    private readonly sessionService: SessionService
+  ) {
+    const storedTrainer = localStorage.getItem('trainer');
+    if (storedTrainer) {
+      this._trainer = JSON.parse(storedTrainer) as Trainer;
+    }
   }
 
-  changeTrainer(value : any) {
-    localStorage.setItem("trainer","")
-    if(value === null) {
-      this.trainer.next(null);
+  get trainer(): Trainer | undefined {
+    return this.trainer;
+  }
+
+  changeLoggedIn(value: boolean) {
+    if (value) {
+      localStorage.setItem('LoggedIn', '1');
     } else {
-      localStorage.setItem("trainer", JSON.stringify(value))
-      this.trainer.next(value)
+      localStorage.setItem('LoggedIn', '0');
     }
-    
+  }
+
+  changeTrainer(value: any) {
+    if (value === null) {
+      localStorage.setItem('trainer', '');
+    } else {
+      localStorage.setItem('trainer', JSON.stringify(value));
+    }
   }
 
   //HTTP calls
 
- 
-
-
-  create(user : any) : void {
-    this.http.post(this.baseURL, user, {headers : {'x-api-key' : this.key}})
-      .subscribe((user) => {
-        console.log(user)
-      },
-      (error) => {
-        console.log(`Error on create user ${error}`)
-      })
+  private findTrainerByUsername(username: string): Observable<Trainer[]> {
+    return this.http.get<Trainer[]>(`${this.baseURL}?username=${username}`);
   }
 
-  async patchUserPokemon(id : number, pokemon : Array<any>) {
-    this.http.patch(`${this.baseURL}/${id}`,pokemon, {
-      headers : { 'x-api-key' : this.key }
-    }).subscribe(response => {
-      console.log(`Returning ${response}`)
-      return response;
-    })
+  private createTrainer(username: string): Observable<Trainer> {
+    const headers = new HttpHeaders({
+      'x-api-key': this.key,
+    });
+    return this.http.post<Trainer>(
+      `${this.baseURL}`,
+      { username },
+      { headers }
+    );
+  }
+
+  public authenticate(username: string, onSuccess: () => void): void {
+    this.attempting = true;
+    console.log(username);
+
+    const mapToRegister = (trainers: Trainer[]): Observable<Trainer> => {
+      if (trainers.length) {
+        return of(trainers[0]);
+      }
+      return this.createTrainer(username);
+    };
+
+    const catchRequestError = (trainer: Trainer) => {
+      return throwError('Could not create trainer');
+    };
+
+    const tapToSession = (trainer: Trainer) => {
+      this.sessionService.setTrainer(trainer);
+    };
+
+    const finalizeRequest = () => (this.attempting = false);
+
+    this.findTrainerByUsername(username)
+      .pipe(
+        retry(3),
+        switchMap(mapToRegister),
+        tap(tapToSession),
+        catchError(catchRequestError),
+        finalize(finalizeRequest)
+      )
+      .subscribe(
+        (trainer: Trainer) => {
+          onSuccess();
+        },
+        (error: string) => {
+          this.error = error;
+        }
+      );
+  }
+
+  async patchUserPokemon(id: number, pokemon: Array<any>) {
+    this.http
+      .patch(`${this.baseURL}/${id}`, pokemon, {
+        headers: { 'x-api-key': this.key },
+      })
+      .subscribe((response) => {
+        console.log(`Returning ${response}`);
+        return response;
+      });
   }
 }
