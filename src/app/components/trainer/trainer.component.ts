@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Trainer } from 'src/app/models/trainer.model';
+import { SessionService } from 'src/app/services/session.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -11,10 +12,12 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class TrainerComponent implements OnInit {
 
-  private trainer : Trainer | null = null;
+  public trainer : Trainer | undefined = undefined;
 
-  constructor(private readonly userService : UserService, private readonly router : Router) { }
+  constructor(private readonly userService : UserService, private readonly router : Router, private readonly sessionService : SessionService) { }
 
   ngOnInit() : void {
+    this.trainer = this.sessionService.trainer;
+    console.log(this.trainer);
   }
 }
