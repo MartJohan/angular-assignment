@@ -1,7 +1,7 @@
 export interface PokemonResponse {
     next : string,
     previous : string,
-    results : Pokemon[]
+    results : Pokemon[];
 }
 
 export interface Pokemon {

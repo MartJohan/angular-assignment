@@ -112,9 +112,9 @@ export class UserService {
       );
   }
 
-  async patchUserPokemon(id: number, pokemon: Array<Pokemon>) {
+  async patchUserPokemon(trainer: Trainer, pokemon: Array<Pokemon>) {
     this.http
-      .patch(`${this.baseURL}/${id}`, {pokemon : pokemon}, {
+      .patch(`${this.baseURL}/${trainer.id}`, {pokemon : pokemon}, {
         headers: { 'x-api-key': this.key },
       })
       .subscribe((response) => {

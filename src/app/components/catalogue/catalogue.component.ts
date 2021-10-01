@@ -1,7 +1,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Pokemon, PokemonResponse } from 'src/app/models/pokemon.model';
+import { Trainer } from 'src/app/models/trainer.model';
 import { PokemonService } from 'src/app/services/pokemon.service';
+import { SessionService } from 'src/app/services/session.service';
 import { UserService } from 'src/app/services/user.service';
 import { environment } from "src/environments/environment";
 
@@ -17,11 +19,13 @@ export class CatalogueComponent implements OnInit {
   public pokemonUrl : string = environment.apiPokemon;
   public imageUrl : string = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"
   public catchedPokemon : Pokemon[] = [];
+  private trainer : Trainer | undefined = undefined;
 
-  constructor(private readonly pokemonService: PokemonService, private readonly userService : UserService) { }
+  constructor(private readonly pokemonService: PokemonService, private readonly userService : UserService, private readonly sessionService : SessionService) { }
 
   ngOnInit(): void {
     this.getNextPokemon();
+    this.trainer = this.sessionService.trainer;
   }
 
   getNextPokemon(){
@@ -52,12 +56,12 @@ export class CatalogueComponent implements OnInit {
       pokemon.id = parseInt(id[1]);
       pokemon.imageUrl = this.imageUrl + id[1];
     });
-    console.log(this.previous);
   }
 
 
   addPokemonToParty(value : Pokemon) {
+    this.catchedPokemon = this.trainer?.pokemon!;
     this.catchedPokemon.push(value);
-    this.userService.patchUserPokemon(1,this.catchedPokemon);
+    this.userService.patchUserPokemon(this.trainer!,this.catchedPokemon);
   }
 }
