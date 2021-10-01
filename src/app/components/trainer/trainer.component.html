@@ -1,10 +1,13 @@
 <div *ngIf="trainer" class="container">
-    <h1>Hello {{trainer.username}}</h1>
-    <div class="row">
-        <div class="col" *ngFor="let pokemon of trainer.pokemon">
-            <img src="{{pokemon.imageUrl}}.png">
-            <p>{{pokemon.name}}</p>
-            <button class="btn btn-danger">Remove</button>
+    <h1>Hello {{trainer.username}}</h1> 
+    <div class="row w-100">
+        <div class="col-3" *ngFor="let pokemon of trainer.pokemon" ngValue="pokemon">
+            <div class="mx-1 my-2 frame">
+                <img src="{{pokemon.imageUrl}}.png">
+                <p>{{pokemon.name}}</p>
+                <button class="btn btn-danger mb-3 rounded" (click)="removePokemon(this.pokemon)">Remove</button>
+            </div>
+            
         </div>
     </div>
 </div>

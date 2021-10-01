@@ -20,11 +20,14 @@ export class PokemonService{
 
     }
 
-    getSpecificPokemons(pokemon : any){
-        this.http.get(`${this.pokemonApi}`,pokemon)
+    getSpecificPokemons(pokemonName : any){
+        /*this.http.get(`${this.pokemonApi}`,pokemon)
         .subscribe((pokemon => {
           console.log(pokemon);
         }))
+        */
+
+        return this.http.get<Pokemon>(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`);
       }
     
      getNextPokemon(next : string) {

@@ -32,9 +32,8 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(loginForm : NgForm) : void {
-
+    
     const { username } = loginForm.value;
-    console.log(loginForm.value);
 
     this.userService.authenticate(username, async () => {
       this.sessionService.setLoggedIn(true);

@@ -20,6 +20,7 @@ import { SessionService } from './session.service';
 })
 export class UserService {
   private _trainer: Trainer | undefined;
+  private pokemon : Pokemon[] = [];
   public attempting: boolean = false;
   private error: string = '';
 
@@ -63,19 +64,19 @@ export class UserService {
   }
 
   private createTrainer(username: string): Observable<Trainer> {
+    
     const headers = new HttpHeaders({
       'x-api-key': this.key,
     });
     return this.http.post<Trainer>(
       `${this.baseURL}`,
-      { username },
+      { 'username' : username, 'pokemon' : this.pokemon  },
       { headers }
     );
   }
 
   public authenticate(username: string, onSuccess: () => void): void {
     this.attempting = true;
-    console.log(username);
 
     const mapToRegister = (trainers: Trainer[]): Observable<Trainer> => {
       if (trainers.length) {
@@ -112,15 +113,15 @@ export class UserService {
       );
   }
 
-  async patchUserPokemon(trainer: Trainer, pokemon: Array<Pokemon>) {
-    console.log(trainer.id)
+  patchUserPokemon(trainer: Trainer, pokemon: Array<Pokemon>, onSuccess : () => void) : void {
     this.http
       .patch(`${this.baseURL}/${trainer.id}`, {pokemon : pokemon}, {
         headers: { 'x-api-key': this.key },
       })
       .subscribe((response) => {
         localStorage.setItem("trainer",JSON.stringify(response))
-        return response;
+        this.sessionService.setTrainer(response as Trainer);
+        onSuccess();
       });
   }
 }
