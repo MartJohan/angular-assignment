@@ -18,6 +18,5 @@ export class TrainerComponent implements OnInit {
 
   ngOnInit() : void {
     this.trainer = this.sessionService.trainer;
-    console.log(this.trainer);
   }
 }
