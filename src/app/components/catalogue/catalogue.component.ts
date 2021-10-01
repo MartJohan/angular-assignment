@@ -60,9 +60,21 @@ export class CatalogueComponent implements OnInit {
 
 
   addPokemonToParty(value : Pokemon) {
-    this.catchedPokemon = this.trainer?.pokemon;
-    this.catchedPokemon!.push(value);
-    console.log(this.catchedPokemon);
-    this.userService.patchUserPokemon(this.trainer!,this.catchedPokemon!);
+    let added= false;
+    if(this.trainer?.pokemon !== undefined) {
+      this.catchedPokemon = this.trainer?.pokemon
+    }
+
+    this.catchedPokemon!.forEach(pokemon => {
+      if(value.id === pokemon.id) {
+        alert("You cannot have more of the same pokemon buddy")
+        added = true;
+      }
+    })
+
+    if(!added) {
+      this.catchedPokemon!.push(value);
+      this.userService.patchUserPokemon(this.trainer!,this.catchedPokemon!, async () => {});
+    }
   }
 }
