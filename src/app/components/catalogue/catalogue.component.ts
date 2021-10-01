@@ -18,7 +18,7 @@ export class CatalogueComponent implements OnInit {
   public allPokemons : Pokemon[] = [];
   public pokemonUrl : string = environment.apiPokemon;
   public imageUrl : string = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"
-  public catchedPokemon : Pokemon[] = [];
+  public catchedPokemon : Pokemon[] | undefined = [];
   private trainer : Trainer | undefined = undefined;
 
   constructor(private readonly pokemonService: PokemonService, private readonly userService : UserService, private readonly sessionService : SessionService) { }
@@ -60,8 +60,9 @@ export class CatalogueComponent implements OnInit {
 
 
   addPokemonToParty(value : Pokemon) {
-    this.catchedPokemon = this.trainer?.pokemon!;
-    this.catchedPokemon.push(value);
-    this.userService.patchUserPokemon(this.trainer!,this.catchedPokemon);
+    this.catchedPokemon = this.trainer?.pokemon;
+    this.catchedPokemon!.push(value);
+    console.log(this.catchedPokemon);
+    this.userService.patchUserPokemon(this.trainer!,this.catchedPokemon!);
   }
 }
