@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
       ) {
 
    }
-
+  //Gets created on page init 
   ngOnInit()  {
     if(this.sessionService.trainer !== undefined) {
       this.router.navigate(['catalogue'])
@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
   get attempting() : boolean {
     return this.userService.attempting;
   }
-
+  //Handles the login form, register new user or existing based on the name
   onSubmit(loginForm : NgForm) : void {
     
     const { username } = loginForm.value;

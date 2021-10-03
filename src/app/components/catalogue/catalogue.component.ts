@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { Pokemon, PokemonResponse } from 'src/app/models/pokemon.model';
 import { Trainer } from 'src/app/models/trainer.model';
 import { PokemonService } from 'src/app/services/pokemon.service';
@@ -16,6 +17,7 @@ export class CatalogueComponent implements OnInit {
   private next : string = environment.apiPokemon;
   public previous : string = "";
   public allPokemons : Pokemon[] = [];
+  public specificPokemon: Pokemon | undefined = undefined;
   public pokemonUrl : string = environment.apiPokemon;
   public imageUrl : string = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"
   public catchedPokemon : Pokemon[] | undefined = [];
@@ -23,11 +25,13 @@ export class CatalogueComponent implements OnInit {
 
   constructor(private readonly pokemonService: PokemonService, private readonly userService : UserService, private readonly sessionService : SessionService) { }
 
+  //Gets created on page init
   ngOnInit(): void {
     this.getNextPokemon();
     this.trainer = this.sessionService.trainer;
   }
 
+  //Gets next 20 pokemon
   getNextPokemon(){
     this.pokemonService.getNextPokemon(this.next).subscribe(data => {
       this.handleResponse(data);
@@ -36,7 +40,7 @@ export class CatalogueComponent implements OnInit {
       console.log(error);
     })
   }
-
+  //Gets the previoius 20 pokemons
   getPreviousPokemon(){
     this.pokemonService.getNextPokemon(this.previous).subscribe(data => {
       this.handleResponse(data);
@@ -45,7 +49,7 @@ export class CatalogueComponent implements OnInit {
       console.log(error);
     })
   }
-
+  //Handle the response in the pokemonResponse model
   handleResponse(response : PokemonResponse) {
     this.next = response.next
     this.previous = response.previous
@@ -58,7 +62,26 @@ export class CatalogueComponent implements OnInit {
     });
   }
 
+  getImageForSpecificPokemon(){
 
+  }
+  //search for specific pokemon
+  searchForPokemon(specificPokemonForm : NgForm) : void{
+    console.log(specificPokemonForm.value);
+    
+    this.pokemonService.getSpecificPokemons(specificPokemonForm.value.pokemonName)
+    .subscribe(pokemon => {
+      this.specificPokemon = pokemon as Pokemon
+      console.log("sprites",pokemon);
+      
+      //this.specificPokemon.imageUrl = pokemon.sprites.front_default
+      console.log(pokemon)
+      
+      
+    })
+  }
+
+  //Add pokemon to the trainers profile
   addPokemonToParty(value : Pokemon) {
     let added= false;
     if(this.trainer?.pokemon !== undefined) {

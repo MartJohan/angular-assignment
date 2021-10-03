@@ -10,13 +10,12 @@ import { Trainer } from './models/trainer.model';
 export class AppComponent implements OnInit{
   public currentTrainer : Trainer | {} = {}
   constructor(private userService : UserService) {}
-
+  //Gets created on page init
   ngOnInit() {
    this.checkLoggedIn();
    this.checkTrainer();
-    
   }
-
+  //Check if the user is logged inn
   checkLoggedIn() {
     if(localStorage.getItem("LoggedIn") === null) {
       localStorage.setItem("LoggedIn", "0");
@@ -28,7 +27,7 @@ export class AppComponent implements OnInit{
       this.userService.changeLoggedIn(false);
     }
   }
-
+  //Check for the trainer
   checkTrainer() {
     let trainer = localStorage.getItem('trainer')
     if(trainer=== null || trainer === "") {

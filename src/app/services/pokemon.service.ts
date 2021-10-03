@@ -19,21 +19,15 @@ export class PokemonService{
     constructor(private readonly http : HttpClient) {
 
     }
-
+    //Get a specific pokemon
     getSpecificPokemons(pokemonName : any){
-        /*this.http.get(`${this.pokemonApi}`,pokemon)
-        .subscribe((pokemon => {
-          console.log(pokemon);
-        }))
-        */
-
-        return this.http.get<Pokemon>(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`);
+        return this.http.get(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`);
       }
-    
+    //Get the next 20 pokemon displayed on the cateoloug page
      getNextPokemon(next : string) {
          return this.http.get<PokemonResponse>(next);
      }
-
+     //Get the previous 20 pokemon displayed on the cateoloug page
      getPreviousPokemon(prev : string) {
          return this.http.get<PokemonResponse>(prev)
      }

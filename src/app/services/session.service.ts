@@ -22,7 +22,7 @@ export class SessionService {
       this.setLoggedIn(true);
     }
    }
-
+   //Sets the logged in value for the user
    setLoggedIn(value : boolean) : void {
     this.loggedIn.next(value);
    }
@@ -30,12 +30,12 @@ export class SessionService {
    get trainer() : Trainer | undefined {
      return this._trainer;
    }
-
+   //sets the trainer to local storage
    setTrainer(trainer : Trainer) : void {
      this._trainer = trainer;
      localStorage.setItem("trainer",JSON.stringify(trainer));
    }
-
+   //Handle the logout process and set logged inn to false
    logout() {
      this._trainer = undefined;
      localStorage.removeItem("trainer");

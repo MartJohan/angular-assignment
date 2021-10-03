@@ -40,7 +40,7 @@ export class UserService {
   get trainer(): Trainer | undefined {
     return this.trainer;
   }
-
+  //Sets local storage to false or true depending on the value given
   changeLoggedIn(value: boolean) {
     if (value) {
       localStorage.setItem('LoggedIn', '1');
@@ -48,7 +48,7 @@ export class UserService {
       localStorage.setItem('LoggedIn', '0');
     }
   }
-
+  //Handles the change trainer process
   changeTrainer(value: any) {
     if (value === null) {
       localStorage.setItem('trainer', '');
@@ -59,10 +59,11 @@ export class UserService {
 
   //HTTP calls
 
+  //Get user based on username
   private findTrainerByUsername(username: string): Observable<Trainer[]> {
     return this.http.get<Trainer[]>(`${this.baseURL}?username=${username}`);
   }
-
+  //Post user based on username
   private createTrainer(username: string): Observable<Trainer> {
     
     const headers = new HttpHeaders({
@@ -74,7 +75,7 @@ export class UserService {
       { headers }
     );
   }
-
+  //Authenticate the user
   public authenticate(username: string, onSuccess: () => void): void {
     this.attempting = true;
 
@@ -94,7 +95,7 @@ export class UserService {
     };
 
     const finalizeRequest = () => (this.attempting = false);
-
+    //finds trainer by username
     this.findTrainerByUsername(username)
       .pipe(
         retry(3),
@@ -112,7 +113,7 @@ export class UserService {
         }
       );
   }
-
+  //Patch the specific pokemon to the user
   patchUserPokemon(trainer: Trainer, pokemon: Array<Pokemon>, onSuccess : () => void) : void {
     this.http
       .patch(`${this.baseURL}/${trainer.id}`, {pokemon : pokemon}, {

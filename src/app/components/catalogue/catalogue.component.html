@@ -19,6 +19,28 @@
                        <button class="btn btn-primary mb-3 rounded" (click)="addPokemonToParty(pokemon)">Capture</button>
                     </div>
                 </div>
+                <div class="w-50 p-3">  <br/>
+                    <div>
+                        <form #specificPokemonForm="ngForm" (ngSubmit)="searchForPokemon(specificPokemonForm)">
+                            <input 
+                            ngModel
+                            class="form-control"
+                            placeholder="Search for a pokemon here..."
+                            #username="ngModel"
+                            name = "pokemonName"
+                            id = "pokemonName"
+                            required> <br/>
+                            <button class="btn btn-primary form-control"
+                            type="submit">Confirm</button>
+                            
+                        </form>
+                        <div *ngIf="specificPokemon">
+                            <p>{{specificPokemon.name}}</p>
+                            <button class="btn btn-primary mb-3 rounded" (click)="addPokemonToParty(specificPokemon)">Capture</button>
+                        </div>
+                    </div>
+                    
+                </div>
             </ng-container>
         </div>
     </div>

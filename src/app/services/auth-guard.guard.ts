@@ -12,6 +12,7 @@ export class AuthGuardGuard implements CanActivate {
   private trainerSub : Subscription | undefined = undefined;
   constructor(private readonly sessionService : SessionService, private readonly router : Router) {}
 
+  //Handles so the user is redirected to the login page if not logged inn
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {

@@ -17,10 +17,11 @@ export class NavbarComponent {
     private readonly router : Router,
     private readonly sessionService : SessionService) {}
 
+    //Gets created on page init
     ngOnInit() {
       this.loggedInSub = this.sessionService.loggedInCurrent.subscribe(value => this.loggedIn = value);
     }
-
+  //Logs out the user
   logOut() {
     this.sessionService.logout();
     this.router.navigate(['login']);

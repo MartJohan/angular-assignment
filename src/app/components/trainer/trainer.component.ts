@@ -16,11 +16,11 @@ export class TrainerComponent implements OnInit {
   public trainer : Trainer | undefined = undefined;
 
   constructor(private readonly userService : UserService, private readonly router : Router, private readonly sessionService : SessionService) { }
-
+  //Gets created on page init
   ngOnInit() : void {
     this.trainer = this.sessionService.trainer;
   }
-
+  //Removes a selected pokemon from the trainer profile
   async removePokemon(value : Pokemon) {
     console.log(value);
     let UpdatedCatch = this.trainer?.pokemon.filter(element => element.id !== value.id);
