@@ -62,9 +62,7 @@ export class CatalogueComponent implements OnInit {
     });
   }
 
-  getImageForSpecificPokemon(){
-
-  }
+ 
   //search for specific pokemon
   searchForPokemon(specificPokemonForm : NgForm) : void{
     console.log(specificPokemonForm.value);
@@ -72,12 +70,8 @@ export class CatalogueComponent implements OnInit {
     this.pokemonService.getSpecificPokemons(specificPokemonForm.value.pokemonName)
     .subscribe(pokemon => {
       this.specificPokemon = pokemon as Pokemon
-      console.log("sprites",pokemon);
-      
-      //this.specificPokemon.imageUrl = pokemon.sprites.front_default
-      console.log(pokemon)
-      
-      
+      const {sprites : {front_default : name}} = pokemon as any;
+      this.specificPokemon.imageUrl = name.slice(0, -4)
     })
   }
 
