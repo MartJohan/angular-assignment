@@ -9,5 +9,7 @@ export interface Pokemon {
     url : string,
     id : number,
     imageUrl : string,
-    sprites : string,
+    sprites : {
+        front_default : string
+    }
 }
